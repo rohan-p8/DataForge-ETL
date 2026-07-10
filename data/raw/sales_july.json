@@ -1,0 +1,19 @@
+[{
+        "order_id": 2001,
+        "customer": "Priya",
+        "item": "Keyboard",
+        "amount": 1500,
+        "quantity": 2,
+        "date": "2026/07/03",
+        "branch": "Mumbai"
+    },
+    {
+        "order_id": 2002,
+        "customer": "Arjun",
+        "item": "Mouse",
+        "amount": 900,
+        "quantity": 1,
+        "date": "03-07-2026",
+        "branch": "Pune"
+    }
+]
