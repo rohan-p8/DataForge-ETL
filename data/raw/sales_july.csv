@@ -3,4 +3,4 @@ order_id,customer_name,product_name,category,quantity,price,order_date,branch
 1002,Anjali Sharma,Mouse,Accessories,2,800,01/07/2026,Pune
 1003,,Keyboard,Accessories,1,1200,2026-07-01,Nagpur
 1004,Rohan Patil,laptop,Electronics,1,55000,July 1 2026,Mumbai
-1005,Amit Kumar,Monitor,Electronics,-1,12000,2026-07-02,Pune
+1005,Amit Kumar,Monitor,Electronics,-2,12000,2026-07-02,Pune

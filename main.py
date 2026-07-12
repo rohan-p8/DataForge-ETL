@@ -1,23 +1,26 @@
 from pathlib import Path
 
 from etl.extractor import extract_csv, extract_json
+from etl.validator import (
+    validate_required_columns,
+    validate_missing_values,
+    validate_positive_numbers,
+)
 
 
 def main():
+    raw_data_dir = Path("data") / "raw"
+
     try:
-        raw_data_dir = Path("data") / "raw"
+        dataframe = extract_csv(raw_data_dir / "sales_july.csv")
+        
+        
+        validate_required_columns(dataframe)
+        validate_missing_values(dataframe)
+        validate_positive_numbers(dataframe)
 
-        csv_file = raw_data_dir / "sales_july.csv"
-        json_file = raw_data_dir / "sales_july.json"
-
-        csv_data = extract_csv(csv_file)
-        json_data = extract_json(json_file)
-
-        print("CSV Data:")
-        print(csv_data)
-
-        print("\nJSON Data:")
-        print(json_data)
+        print("Validation successful. Data is ready for further processing.")
+        print(dataframe)
         
     except Exception as e:
         print(f"ETL pipeline error: {e}")
