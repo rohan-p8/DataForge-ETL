@@ -14,9 +14,15 @@ from etl.transformer import (
     remove_duplicates,
 )
 
+from etl.loader import save_processed_csv
+
 
 def main():
     raw_data_dir = Path("data") / "raw"
+    processed_data_dir = Path("data") / "processed"
+
+    input_file = raw_data_dir / "sales_july.csv"
+    output_file = processed_data_dir / "sales_july_processed.csv"
 
     try:
         # Extract data from CSV file
@@ -32,6 +38,9 @@ def main():
         dataframe = remove_extra_spaces(dataframe)
         dataframe = convert_to_title_case(dataframe)
         dataframe = remove_duplicates(dataframe)
+
+        # Load the processed data to a CSV file
+        save_processed_csv(dataframe, output_file)
 
 
         # Output

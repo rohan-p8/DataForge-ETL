@@ -1,0 +1,3 @@
+customer_id,transaction_id,customer_name,product,quantity,price,transaction_date
+1,1001,Rohan,Laptop,2,65000,2026-07-01
+2,1002,Amit,Mouse,1,700,2026-07-01
