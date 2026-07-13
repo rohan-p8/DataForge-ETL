@@ -1,5 +1,6 @@
 from pathlib import Path
-
+import logging
+from venv import logger
 import pandas as pd
 
 
@@ -13,4 +14,5 @@ def save_processed_csv(dataframe: pd.DataFrame, output_path: Path) -> None:
 
     dataframe.to_csv(output_path, index=False)
 
-    print(f"Processed file saved to: {output_path}")
+    
+    logger.info(f"Processed file saved to: {output_path}")  

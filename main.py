@@ -16,6 +16,8 @@ from etl.transformer import (
 
 from etl.loader import save_processed_csv
 
+from utils.logger import logger
+
 
 def main():
     raw_data_dir = Path("data") / "raw"
@@ -25,30 +27,41 @@ def main():
     output_file = processed_data_dir / "sales_july_processed.csv"
 
     try:
+
+        logger.info("ETL Pipeline Started.")
+
+
         # Extract data from CSV file
+        logger.info("Reading/extracting data from CSV file.")
         dataframe = extract_csv(raw_data_dir / "sales_july.csv")
         
+
         # Validate the extracted data
+        logger.info("Validating extracted data.")
         validate_required_columns(dataframe)
         validate_missing_values(dataframe)
         validate_positive_numbers(dataframe)
 
+
         # Transform the data
+        logger.info("Transforming data.")
         dataframe = standardize_column_names(dataframe)
         dataframe = remove_extra_spaces(dataframe)
         dataframe = convert_to_title_case(dataframe)
         dataframe = remove_duplicates(dataframe)
 
+
         # Load the processed data to a CSV file
+        logger.info("Saving processed data to CSV file.")
         save_processed_csv(dataframe, output_file)
 
 
         # Output
-        print("\nETL pipeline executed successfully. Here is the transformed data:\n")
-        print(dataframe)
+        logger.info("ETL Pipeline Completed Successfully.")
+        
         
     except Exception as e:
-        print(f"ETL pipeline error: {e}")
+        logger.error(f"ETL Pipeline Failed: {e}")
 
 if __name__ == "__main__":
     main()
