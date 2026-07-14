@@ -18,13 +18,12 @@ from etl.loader import save_processed_csv
 
 from utils.logger import logger
 
+from config.settings import INPUT_FILE, OUTPUT_FILE
+
+
+
 
 def main():
-    raw_data_dir = Path("data") / "raw"
-    processed_data_dir = Path("data") / "processed"
-
-    input_file = raw_data_dir / "sales_july.csv"
-    output_file = processed_data_dir / "sales_july_processed.csv"
 
     try:
 
@@ -33,7 +32,7 @@ def main():
 
         # Extract data from CSV file
         logger.info("Reading/extracting data from CSV file.")
-        dataframe = extract_csv(raw_data_dir / "sales_july.csv")
+        dataframe = extract_csv(INPUT_FILE)
         
 
         # Validate the extracted data
@@ -53,7 +52,7 @@ def main():
 
         # Load the processed data to a CSV file
         logger.info("Saving processed data to CSV file.")
-        save_processed_csv(dataframe, output_file)
+        save_processed_csv(dataframe, OUTPUT_FILE)
 
 
         # Output
