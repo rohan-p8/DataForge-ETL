@@ -31,7 +31,7 @@ def convert_to_title_case(dataframe: pd.DataFrame) -> pd.DataFrame:
 
     dataframe["customer_name"] = dataframe["customer_name"].str.title()
 
-    dataframe["product"] = dataframe["product"].str.title()
+    dataframe["product_name"] = dataframe["product_name"].str.title()
 
     return dataframe
 

@@ -2,9 +2,9 @@ import pandas as pd
 
 REQUIRED_COLUMNS = ["transaction_id",
                     "customer_id",
-                    "product",
+                    "product_name",
                     "quantity",
-                    "price",
+                    "unit_price",
                     "transaction_date"]
 
 def validate_required_columns(dataframe: pd.DataFrame) -> None:
@@ -41,5 +41,5 @@ def validate_positive_numbers(dataframe: pd.DataFrame) -> None:
     if (dataframe["quantity"] <= 0).any():
         raise ValueError("Quantity must be greater than zero.")
     
-    if (dataframe["price"] <= 0).any():
-        raise ValueError("Price must be greater than zero.")
+    if (dataframe["unit_price"] <= 0).any():
+        raise ValueError("Unit price must be greater than zero.")
