@@ -35,4 +35,11 @@ INPUT_FILE = RAW_DATA_DIR / INPUT_FILE_NAME
 OUTPUT_FILE = PROCESSED_DATA_DIR / OUTPUT_FILE_NAME
 
 LOG_FILE = LOG_DIR / "etl.log"
-    
+
+
+DATABASE_CONFIG = {
+    "host": "localhost",
+    "user": "root",
+    "password": "password",
+    "database": "dataforge_etl"
+}

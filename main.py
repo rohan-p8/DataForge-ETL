@@ -1,5 +1,7 @@
 from pathlib import Path
 
+from config.database import get_connection
+
 from etl.extractor import extract_csv, extract_json
 from etl.validator import (
     validate_required_columns,
@@ -14,7 +16,12 @@ from etl.transformer import (
     remove_duplicates,
 )
 
-from etl.loader import save_processed_csv
+from etl.loader import (
+    save_processed_csv, 
+    insert_customers,
+    insert_products,
+    insert_transactions
+)
 
 from utils.logger import logger
 
@@ -22,8 +29,9 @@ from config.settings import INPUT_FILE, OUTPUT_FILE
 
 
 
-
 def main():
+
+    connection = None
 
     try:
 
@@ -55,12 +63,31 @@ def main():
         save_processed_csv(dataframe, OUTPUT_FILE)
 
 
+        # Connect to the database MySQL
+        logger.info("Connecting to the MySQL database.")
+        connection = get_connection()
+
+        if connection is not None:
+            logger.info("Loading customers into the database.")
+            insert_customers(connection, dataframe)
+            logger.info("Loading products into the database.")
+            insert_products(connection, dataframe)
+            logger.info("Loading transactions into the database.")
+            insert_transactions(connection, dataframe)
+
+
         # Output
         logger.info("ETL Pipeline Completed Successfully.")
         
         
     except Exception as e:
         logger.error(f"ETL Pipeline Failed: {e}")
+
+
+    finally:
+        if connection is not None:
+            connection.close()
+            logger.info("Database connection closed.")
 
 if __name__ == "__main__":
     main()
