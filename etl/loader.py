@@ -31,17 +31,19 @@ def insert_customers(connection, dataframe):
         INSERT IGNORE INTO customers(customer_id, customer_name)
         VALUES (%s, %s)
         """
+        customer_data = []
 
         for _, row in dataframe.iterrows():
-
-            cursor.execute(
-                query,
+            
+            customer_data.append(
                 (
-                        row['customer_id'],
-                        row['customer_name']
-                ),
+                    row['customer_id'],
+                    row['customer_name'],
+                )
             )
-
+    
+        cursor.executemany(query, customer_data)
+        
         connection.commit()
 
         logger.info("Customers inserted successfully into the database.")
@@ -63,13 +65,14 @@ def insert_products(connection, dataframe):
         VALUES (%s)
         """
 
-        for _, row in dataframe.iterrows():
-            cursor.execute(
-                query,
-                (
-                    row['product_name'],
-                ),
-            )
+        product_data = []
+
+        unique_products = dataframe['product_name'].drop_duplicates()
+
+        for product in unique_products:
+            product_data.append((product,))
+
+        cursor.executemany(query, product_data)
         
         connection.commit()
 
@@ -80,7 +83,7 @@ def insert_products(connection, dataframe):
 
 
 
-def insert_transactions(connection, dataframe):
+def insert_transactions(connection, dataframe: pd.DataFrame) -> None:
     """
     Inserts transaction data from the DataFrame into the transactions table.
     """
@@ -88,41 +91,42 @@ def insert_transactions(connection, dataframe):
     try:
         cursor = connection.cursor()
 
-        select_query = """
-        SELECT product_id 
-        FROM products 
-        WHERE product_name = %s
-        """
+        # Load all products once
+        cursor.execute("""
+                       SELECT product_id, product_name 
+                       FROM products""")
+
+        product_map = {}
+
+        for product_id, product_name in cursor.fetchall():
+            product_map[product_name] = product_id
 
         insert_query = """
         INSERT INTO transactions
-        (transaction_id, customer_id, product_id, quantity, 
-        unit_price, transaction_date)
+        (
+            transaction_id,
+            customer_id,
+            product_id,
+            quantity,
+            unit_price,
+            transaction_date
+        )
         VALUES (%s, %s, %s, %s, %s, %s)
         """
 
+        transaction_data = []
 
         for _, row in dataframe.iterrows():
-            
-            # Step 1: Find product_id
-            cursor.execute(
-                select_query,
-                (row['product_name'],)
-            )
 
-            result = cursor.fetchone() # to retrieve one record product_id 
+            product_id = product_map.get(row['product_name'])
 
-            if result is None:
+            if product_id is None:
                 logger.error(
                     f"Product not found: {row['product_name']}"
                 )
                 continue
 
-            product_id = result[0]
-
-            # Step 2: Insert transaction
-            cursor.execute(
-                insert_query,
+            transaction_data.append(
                 (
                     row['transaction_id'],
                     row['customer_id'],
@@ -130,15 +134,14 @@ def insert_transactions(connection, dataframe):
                     row['quantity'],
                     row['unit_price'],
                     row['transaction_date']
-                ),
+                )
             )
 
-        connection.commit()
-        
-        logger.info("Transactions inserted successfully into the database.")
+        cursor.executemany(insert_query, transaction_data)
 
+        connection.commit()
+
+        logger.info("Transactions inserted successfully into the database.")
 
     except Error as e:
         logger.error(f"Error inserting transactions: {e}")
-
-
