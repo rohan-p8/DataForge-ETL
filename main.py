@@ -75,12 +75,18 @@ def main():
             logger.info("Loading transactions into the database.")
             insert_transactions(connection, dataframe)
 
+            # Commit the changes to the database
+            connection.commit()  
 
-        # Output
-        logger.info("ETL Pipeline Completed Successfully.")
+
+             # Output
+            logger.info("ETL Pipeline Completed Successfully.")
         
         
     except Exception as e:
+
+        connection.rollback()
+        logger.error("Rolling back the transaction due to an error.")
         logger.error(f"ETL Pipeline Failed: {e}")
 
 

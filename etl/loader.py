@@ -44,7 +44,6 @@ def insert_customers(connection, dataframe):
     
         cursor.executemany(query, customer_data)
         
-        connection.commit()
 
         logger.info("Customers inserted successfully into the database.")
 
@@ -73,8 +72,6 @@ def insert_products(connection, dataframe):
             product_data.append((product,))
 
         cursor.executemany(query, product_data)
-        
-        connection.commit()
 
         logger.info("Products inserted successfully into the database.")
 
@@ -102,7 +99,7 @@ def insert_transactions(connection, dataframe: pd.DataFrame) -> None:
             product_map[product_name] = product_id
 
         insert_query = """
-        INSERT INTO transactions
+        INSERT IGNORE INTO transactions
         (
             transaction_id,
             customer_id,
@@ -138,8 +135,6 @@ def insert_transactions(connection, dataframe: pd.DataFrame) -> None:
             )
 
         cursor.executemany(insert_query, transaction_data)
-
-        connection.commit()
 
         logger.info("Transactions inserted successfully into the database.")
 
