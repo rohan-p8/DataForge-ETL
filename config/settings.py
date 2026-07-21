@@ -1,12 +1,16 @@
 from pathlib import Path
 
 from utils.logger import LOG_FILE
+from dotenv import load_dotenv
+import os
 
 # ------------------------
 # Project Directories
 # ------------------------
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(BASE_DIR / ".env")
 
 DATA_DIR = BASE_DIR / "data"
 
@@ -38,8 +42,9 @@ LOG_FILE = LOG_DIR / "etl.log"
 
 
 DATABASE_CONFIG = {
-    "host": "localhost",
-    "user": "root",
-    "password": "password",
-    "database": "dataforge_etl"
+    "host": os.getenv("DB_HOST"),
+    "user": os.getenv("DB_USER"),
+    "password": os.getenv("DB_PASSWORD"),
+    "database": os.getenv("DB_NAME"),
+    "port": int(os.getenv("DB_PORT", 3306)),  # Default to 3306 if not set
 }
